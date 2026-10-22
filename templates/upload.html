@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>File Uploads</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; color: #222; }
+    h1 { font-size: 1.5rem; }
+    form.upload { display: flex; gap: .5rem; margin-bottom: 1.5rem; }
+    input[type=file] { flex: 1; padding: .5rem; border: 1px solid #ccc; border-radius: 6px; }
+    button { padding: .5rem 1rem; border: none; border-radius: 6px; background: #000; color: #fff; cursor: pointer; }
+    button.danger { background: #c62828; padding: .25rem .5rem; font-size: .8rem; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; align-items: center; justify-content: space-between; padding: .5rem; border-bottom: 1px solid #eee; }
+    a { color: #0066cc; text-decoration: none; word-break: break-all; }
+    a:hover { text-decoration: underline; }
+    .empty { color: #888; font-style: italic; }
+  </style>
+</head>
+<body>
+  <h1>File Uploads</h1>
+
+  <form class="upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" required>
+    <button type="submit">Upload</button>
+  </form>
+
+  {% if files %}
+    <ul>
+      {% for f in files %}
+        <li>
+          <a href="{{ f.url }}" target="_blank" rel="noopener">{{ f.filename }}</a>
+          <form method="post" action="{{ url_for('delete_file', file_id=f.id) }}"
+                onsubmit="return confirm('Delete {{ f.filename }}?');">
+            <button class="danger" type="submit">Delete</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="empty">No files uploaded yet.</p>
+  {% endif %}
+</body>
+</html>
